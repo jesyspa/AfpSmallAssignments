@@ -1,0 +1,21 @@
+name: set1
+version: 0.0.1
+synopsis: The first set of assignments for Advanced Functional Programming, due
+  the 20th of September 2013.
+license: PublicDomain
+author: Anton Golov, Ernesto Rodriguez
+tested-with: GHC == 7.6.3
+build-type: Simple
+cabal-version: >= 1.18
+
+library
+  build-depends: base
+  exposed-modules: SmoothPerms
+  -- Or do we want Haskell2010?  I don't know the difference.
+  default-language: Haskell98
+
+executable SmoothPermsTest
+  build-depends: base, QuickCheck
+  main-is: SmoothPermsTest.hs
+  other-modules: SmoothPerms
+  default-language: Haskell98
