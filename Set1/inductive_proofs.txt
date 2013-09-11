@@ -1,0 +1,136 @@
+Given the following definitions:
+
+    data Tree a = Leaf a
+                | Node (Tree a) (Tree a)
+                deriving (Show)
+
+    size :: Tree a -> Int
+    size (Leaf a) = 1
+    size (Node l r) = size l + size r
+
+    length :: [a] -> Int
+    length [] = 0
+    length (x:xs) = 1 + length xs
+
+    flatten :: Tree a -> [a]
+    flatten (Leaf a) = [a]
+    flatten (Node l r) = flatten l ++ flatten r
+
+    (++) :: [a] -> [a] -> [a]
+    [] ++ ys = ys
+    (x:xs) ++ ys = x : (xs ++ ys)
+
+Theorem: ∀(t :: Tree a). length (flatten t) == size t.
+
+Lemma 1: ∀(ys :: [a]). length ([] ++ ys) == length [] + length ys
+
+Proof:
+Fix ys.  Use definition of [] ++ ys:
+
+    length ys == length [] + length ys
+
+Use definition of length []:
+
+    length ys == 0 + length ys
+
+Use the fact 0 is the neutral element of addition.
+
+    length ys == length ys
+
+QED.
+
+Lemma 2: ∀(x :: a) (xs :: [a]) (ys :: [a]).
+    (length (xs ++ ys) == length (x:xs) + length ys) ->
+        (length ((x:xs) ++ ys) == length (x:xs) + length ys)
+
+Proof:
+Fix x, xs, ys.  Assume (induction hypothesis) length (xs ++ ys) == length (x:xs) + length ys.  We prove
+
+    length ((x:xs) ++ ys) == length (x:xs) + length ys
+
+Use the definition of (x:xs) ++ ys:
+
+    length (x:(xs ++ ys)) == length (x:xs) + length ys
+
+Use the definition of length (x:xs) twice:
+
+    1 + length (xs ++ ys) == (1 + length xs) + length ys
+
+Use the induction hypothesis:
+
+    1 + (length xs + length ys) == (1 + length xs) + length ys
+
+Use the associativity of (+):
+
+    (1 + length xs) + length ys == (1 + length xs) + length ys
+
+QED.
+
+Lemma 3: ∀(xs :: [a]) (ys :: [a]). length (xs ++ ys) == length xs ++ length ys
+
+Proof:
+Follows by induction from lemmas 1 and 2.
+
+Lemma 4: ∀(x :: a) . length (flatten (Leaf x)) == size (Leaf x)
+
+Proof:
+Fix x.  Use the definition of flatten (Leaf x):
+
+    length [x] == size (Leaf x)
+
+Use the definition of size (Leaf x):
+
+    length [x] == 1
+
+Desugar [x]:
+
+    length (x:[]) == 1
+
+Use the definition of length (x:xs):
+
+    1 + length [] == 1
+
+Use the definition of length []:
+
+    1 + 0 == 1
+
+Use the fact 0 is the neutral element for addition:
+
+    1 == 1
+
+QED.
+
+Lemma 5: ∀(l :: Tree a) (r :: Tree a).
+    (length (flatten l) == size l && length (flatten r) == size r) ->
+        length (flatten (Node l r)) == size (Node l r)
+
+Proof:
+Fix l, r.  Assume (induction hypothesis)
+
+    length (flatten l) == size l && length (flatten r) == size r
+
+We prove
+
+    length (flatten (Node l r)) == size (Node l r)
+
+Use definition of flatten (Node l r):
+
+    length (flatten l ++ flatten r) == size (Node l r)
+
+Use definition of size (Node l r):
+
+    length (flatten l ++ flatten r) == size l + size r
+
+Use lemma 3:
+
+    length (flatten l) + length (flatten r) == size l + size r
+
+True by the induction hypothesis.
+
+QED.
+
+Theorem (again): ∀(t :: Tree a). length (flatten t) == size t.
+
+Proof:
+Follows by induction from lemmas 4 and 5.
+
