@@ -6,7 +6,7 @@ license: PublicDomain
 author: Anton Golov, Ernesto Rodriguez
 tested-with: GHC == 7.6.3
 build-type: Simple
-cabal-version: >= 1.18
+cabal-version: >= 1.12
 
 library
   build-depends: base
