@@ -2,27 +2,7 @@ module SmoothPerms where
 
 import Data.Maybe (isJust)
 
---smooth_perms :: Int -> [Int] -> [[Int]]
-
 data Tree a = Node a [Tree a] deriving (Show, Eq, Ord)
-
--- unfoldTree :: (b -> [(a, b)]) -> b -> Tree a
--- unfoldTree f b = Node . map g $ f b
---     where g (x, y) = (x, unfoldTree f y)
-
--- | Given a function, apply it to every element of the list, passing along the
--- list excluding that element.
---
--- Does not preserve order, but we don't care.
---
--- There has got to be a better name for this.
--- foreachWithRest :: (a -> [a] -> b) -> [a] -> [b]
--- foreachWithRest f = go []
---     where go ys [] = []
---           go ys (x:xs) = f x (ys ++ xs) : go (x:ys) xs
-
--- buildPermTree :: [a] -> Tree a
--- buildPermTree = unfoldTree (foreachWithRest (,))
 
 -- | Remove the first element in the list that suffices
 -- the given contition
@@ -33,7 +13,7 @@ filterFst eq (x:xs)
   | otherwise = x:filterFst eq xs
 
 -- | Given a previous element and the maximum allowed distance,
--- this function creates a gree that when traversed in DFS mode
+-- this function creates a tree that when traversed in DFS mode
 -- can be concatenated to obtain all smooth permutations with
 -- respect to k
 smooth_perms' :: (Num a,Eq a,Ord a) => a -> a -> [a] -> Maybe (Tree a)
@@ -69,4 +49,4 @@ smooth_perms k xs = concatMap flatten $ pTrees >>= getJust
     getJust Nothing = []
     getJust (Just x) = [x]
     pTrees = map (\x-> smooth_perms' k x $ filterFst (x==) xs) xs
-        
+
